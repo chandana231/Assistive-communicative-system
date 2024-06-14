@@ -315,103 +315,6 @@ def bill():
 
 
 
-
-
-def currency():
-    cam = cv2.VideoCapture(0)
-    cv2.namedWindow("test")
-    img_counter = 0
-    ret, frame = cam.read()
-    if not ret:
-        print("failed to grab frame")
-        return
-    cv2.imshow("test", frame)
-
-    k = cv2.waitKey(1)
-
-    # time.sleep(5) # after every 5 sec take ss
-    img_name = "currency.png".format(img_counter)
-        # img_name = words[-1]+"opencv_frame_{}.png".format(img_counter)
-
-    # path= 'C:/Users/Admin/Desktop/PRIYANSH/MPR/PRIYANSH/faces'
-    # cv2.imwrite(img_name, frame)
-    cv2.imwrite(img_name, frame)
-    print("{} written!".format(img_name))
-    img_counter += 1
-
-    # time.sleep(2) # ML program
-
-    if os.path.exists(os.path.join("absolute path",img_name)): #delete the file
-        os.remove(os.path.join("absolute path",img_name))
-    else:
-        print("The file does not exist")
-    
-    max_val = 8
-    max_pt = -1
-    max_kp = 0
-
-    orb = cv2.ORB_create()
-    test_img = read_img('currency.png')
-    # test_img = read_img('currency.png')
-    # resizing must be dynamic
-    original = resize_img(test_img, 0.4)
-    # display('original', original)
-
-    # keypoints and descriptors
-    # (kp1, des1) = orb.detectAndCompute(test_img, None)
-    (kp1, des1) = orb.detectAndCompute(test_img, None)
-
-    training_set = ['files/20.jpg', 'files/50.jpg', 'files/100.jpg', 'files/500.jpg','files/2000.jpg']
-
-    for i in range(0, len(training_set)):
-        # train image
-        train_img = cv2.imread(training_set[i])
-
-        (kp2, des2) = orb.detectAndCompute(train_img, None)
-
-        # brute force matcher
-        bf = cv2.BFMatcher()
-        all_matches = bf.knnMatch(des1, des2, k=2)
-
-        good = []
-        # give an arbitrary number -> 0.789
-        # if good -> append to list of good matches
-        for (m, n) in all_matches:
-            if m.distance < 0.789 * n.distance:
-                good.append([m])
-
-        if len(good) > max_val:
-            max_val = len(good)
-            max_pt = i
-            max_kp = kp2
-
-        print(i, ' ', training_set[i], ' ', len(good))
-
-    if max_val != 8:
-        print(training_set[max_pt])
-        print('good matches ', max_val)
-
-        train_img = cv2.imread(training_set[max_pt])
-        img3 = cv2.drawMatchesKnn(test_img, kp1, train_img, max_kp, good, 4)
-        
-        note = str(training_set[max_pt])[6:-4]
-        print('\nDetected denomination: Rs. ', note)
-        talk('\nDetected denomination: Rs. ')
-        talk(note)
-        # audio_file = 'audio/{}.mp3'.format(note)
-        #audio_file = "value.mp3"
-        #tts = gTTS(text=speech_out, lang="en")
-        #tts.save(audio_file)
-        #return_code = subprocess.call(["afplay", audio_file])
-        #playsound(audio_file)
-        # (plt.imshow(img3), plt.show())
-
-    else:
-        print('No Matches')
-        talk('No Matches')
-    return
-
-
 talk('listening...')
 while True:
     
@@ -474,15 +377,7 @@ while True:
                 talk("okay")
                 name=read()
                 talk(name)   
-
-            if "bill" in words:
-                talk("okay") 
-                name=bill()
-                # talk(name)   
-            if "currency" in words: 
-                talk("okay")
-                name=currency()
-                # talk(name)                   
+                   
             if words == "exit":
                 print("...")
                 sleep(1)
