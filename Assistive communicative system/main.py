@@ -259,62 +259,6 @@ def read():
     print(output)
     return output
 
-
-
-def bill():
-    cam = cv2.VideoCapture(0)
-    cv2.namedWindow("test")
-    img_counter = 0
-    ret, frame = cam.read()
-    if not ret:
-        print("failed to grab frame")
-        return
-    cv2.imshow("test", frame)
-
-    k = cv2.waitKey(1)
-
-    # time.sleep(5) # after every 5 sec take ss
-    img_name = "bill.png".format(img_counter)
-        # img_name = words[-1]+"opencv_frame_{}.png".format(img_counter)
-
-    # path= 'C:/Users/Admin/Desktop/PRIYANSH/MPR/PRIYANSH/faces'
-    # cv2.imwrite(img_name, frame)
-    cv2.imwrite(img_name, frame)
-    print("{} written!".format(img_name))
-    img_counter += 1
-
-    # time.sleep(2) # ML program
-
-    if os.path.exists(os.path.join("absolute path",img_name)): #delete the file
-        os.remove(os.path.join("absolute path",img_name))
-    else:
-        print("The file does not exist")
-    
-    
-    # img1="bill.jpg"
-    image=cv2.imread('bill.png',0)
-    #convert it into text
-    text=(pytesseract.image_to_string(image)).lower()
-    # print(text)
-    match=re.findall(r'\d+[/.-]\d+[/.-]\d+', text)
-
-    st=" "
-    st=st.join(match)
-    print(st)
-    talk("Bill on the date of")
-    talk(st)
-    #lets find the price of the category.
-    price=re.findall(r'[\$\£\€](\d+(?:\.\d{1,2})?)',text)
-    price = list(map(float,price)) 
-    print(max(price))
-    x=max(price)
-    talk("price is")  
-    talk(x)
-    print(output)
-    return output
-
-
-
 talk('listening...')
 while True:
     
